@@ -3,7 +3,7 @@ return {
 	opts = {
 		format_after_save = { lsp_fallback = true },
 		formatters_by_ft = {
-			json = { { "prettierd" } },
+			json = { { "biome" } },
 			lua = { "stylua" },
 			python = { "black" },
 		},
