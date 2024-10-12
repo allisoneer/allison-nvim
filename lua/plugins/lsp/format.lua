@@ -1,11 +1,12 @@
 return {
 	"stevearc/conform.nvim",
 	opts = {
-		format_after_save = { lsp_fallback = true },
+		format_after_save = { async = true, lsp_fallback = true },
 		formatters_by_ft = {
 			json = { "biome" },
 			lua = { "stylua" },
 			python = { "black" },
+			["c++"] = { "clang-format" },
 		},
 	},
 	config = function(conf)

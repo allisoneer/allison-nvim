@@ -12,4 +12,5 @@ return {
 		cmd = { zls_path },
 	},
 	biome = {},
+	clangd = {},
 }
