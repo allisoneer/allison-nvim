@@ -13,4 +13,5 @@ return {
 	},
 	biome = {},
 	clangd = {},
+	black = {},
 }
