@@ -16,8 +16,8 @@ return {
 
 			-- Cmp Stuff
 			"hrsh7th/nvim-cmp",
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
+			-- "L3MON4D3/LuaSnip",
+			-- "saadparwaiz1/cmp_luasnip",
 
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
@@ -50,7 +50,7 @@ return {
 				end
 			end
 
-			
+
 			mason_lspconfig.setup({
 				ensure_installed = ensure_installed,
 			})
@@ -79,16 +79,16 @@ return {
 			})
 
 			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			require("luasnip.loaders.from_vscode").lazy_load()
-			luasnip.config.setup({})
+			-- local luasnip = require("luasnip")
+			-- require("luasnip.loaders.from_vscode").lazy_load()
+			-- luasnip.config.setup({ enable_autosnippets = false })
 
 			cmp.setup({
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body)
-					end,
-				},
+				-- snippet = {
+				-- 	expand = function(args)
+				-- 		luasnip.lsp_expand(args.body)
+				-- 	end,
+				-- },
 				mapping = cmp.mapping.preset.insert({
 					["<C-n>"] = cmp.mapping.select_next_item(),
 					["<C-p>"] = cmp.mapping.select_prev_item(),
@@ -103,8 +103,8 @@ return {
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
-						elseif luasnip.expand_or_locally_jumpable() then
-							luasnip.expand_or_jump()
+							-- elseif luasnip.expand_or_locally_jumpable() then
+							-- 	luasnip.expand_or_jump()
 						else
 							fallback()
 						end
@@ -112,8 +112,8 @@ return {
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
-						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1)
+							-- elseif luasnip.locally_jumpable(-1) then
+							-- 	luasnip.jump(-1)
 						else
 							fallback()
 						end
@@ -121,9 +121,9 @@ return {
 				}),
 				sources = {
 					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
+					-- { name = "luasnip" },
 					{ name = "path" },
-					-- uncomment to eiasble local buffer completion
+					-- uncomment to diasble local buffer completion
 					-- also check line 24 ( hit :24 in normal mode )
 					-- { name = "buffer" },
 				},
