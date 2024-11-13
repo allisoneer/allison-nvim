@@ -1,4 +1,35 @@
-local zls_path = vim.fs.normalize("~/.local/bin/zls")
+local cwd = vim.fn.getcwd()
+
+local function is_zml_project()
+	return vim.endswith(cwd, "zml") or
+			vim.endswith(cwd, "zml/examples")
+end
+
+local zls_config = {}
+if is_zml_project() then
+	-- In ZML project, use the project's custom ZLS and Zig
+	zls_config = {
+		cmd = { cwd .. "/tools/zls.sh" },
+		settings = {
+			zls = {
+				enable_autofix = true,
+				zig_exe_path = cwd .. "/tools/zig.sh",
+			},
+		},
+	}
+else
+	-- Default configuration for other projects
+	zls_config = {
+		cmd = { vim.fs.normalize("~/.local/bin/zls") },
+		settings = {
+			zls = {
+				enable_autofix = true,
+				zig_exe_path = "zig", -- or specific path if needed
+			},
+		},
+	}
+end
+
 return {
 	gopls = {},
 	rust_analyzer = {},
@@ -8,10 +39,7 @@ return {
 			telemetry = { enable = false },
 		},
 	},
-	zls = {
-		cmd = { zls_path },
-	},
+	zls = zls_config,
 	biome = {},
 	clangd = {},
-	black = {},
 }
