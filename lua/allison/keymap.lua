@@ -28,3 +28,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
 	pattern = "*",
 })
+
+
+nmap("<leader>g", "<Cmd>BufferPick<CR>", "Pick a buffer!")
+
+nmap("<leader>z", function()
+	vim.system({ "/home/allison/.local/bin/zig-nvim-plugin" })
+end, "Run zbr in zig-nvim-plugin directory")
+
+nmap("<C-t>", "<Cmd>enew<CR>", "new buffer tab")
+nmap("<C-q>", "<Cmd>BufferClose!<CR>", "Force close current buffer")
