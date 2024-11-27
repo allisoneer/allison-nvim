@@ -38,3 +38,14 @@ vim.o.foldcolumn = "0"
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
+
+
+-- Add Zine file type associations
+vim.filetype.add({
+	extension = {
+		smd = 'supermd',
+		shtml = 'superhtml',
+		ziggy = 'ziggy',
+		['ziggy-schema'] = 'ziggy_schema',
+	},
+})

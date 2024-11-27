@@ -7,7 +7,32 @@ return {
 			lua = { "stylua" },
 			python = { "black" },
 			["c++"] = { "clang-format" },
+			-- Add Zine formats
+			superhtml = { "superhtml" },
+			ziggy = { "ziggy" },
+			ziggy_schema = { "ziggy_schema" },
 		},
+		formatters = {
+			-- Add Zine formatters
+			superhtml = {
+				inherit = false,
+				command = 'superhtml',
+				stdin = true,
+				args = { 'fmt', '--stdin-super' },
+			},
+			ziggy = {
+				inherit = false,
+				command = 'ziggy',
+				stdin = true,
+				args = { 'fmt', '--stdin' },
+			},
+			ziggy_schema = {
+				inherit = false,
+				command = 'ziggy',
+				stdin = true,
+				args = { 'fmt', '--stdin-schema' },
+			},
+		}
 	},
 	config = function(conf)
 		require("conform").setup(conf.opts)
