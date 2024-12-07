@@ -24,7 +24,6 @@ else
 		settings = {
 			zls = {
 				enable_autofix = true,
-				zig_exe_path = "zig", -- or specific path if needed
 			},
 		},
 	}
