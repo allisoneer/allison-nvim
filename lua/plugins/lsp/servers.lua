@@ -41,4 +41,17 @@ return {
 	zls = zls_config,
 	biome = {},
 	clangd = {},
+	pyright = {
+		settings = {
+			python = {
+				analysis = {
+					autoSearchPaths = true,
+					useLibraryCodeForTypes = true,
+					diagnosticMode = "workspace",
+				},
+				venvPath = ".",
+				pythonPath = ".venv/bin/python",
+			},
+		},
+	},
 }
