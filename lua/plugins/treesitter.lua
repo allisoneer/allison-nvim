@@ -10,6 +10,8 @@ return {
 			"go",
 			"rust",
 			"vimdoc",
+			"markdown",
+			"markdown_inline",
 			-- Add Zine parsers here
 			"ziggy",
 			"ziggy_schema",
