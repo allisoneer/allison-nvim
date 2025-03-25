@@ -1,62 +1,70 @@
 # Neovim Config
 
-## Notes to self:
-1. I want a tabline, here are some notable ones to refer to:
-  - https://github.com/romgrk/barbar.nvim
-  - https://github.com/nanozuki/tabby.nvim
-  - RESOLVED: I got barbar and am using it full time now. 
-2. Startup section:
-  - https://github.com/TobinPalmer/Tip.nvim
-  - https://github.com/CWood-sdf/spaceport.nvim
-3. Note taking:
-  - https://github.com/stevearc/gkeep.nvim
-  - look for others(markdown/notes)
-4. Utility:
-  - There seems to be some support for better buffer managers here, consider them.
-  - https://github.com/chrisgrieser/nvim-early-retirement Something like this may be useful in addition to what I use for buffer management.
-5. Terminal additions:
-  - https://github.com/willothy/flatten.nvim This looks fascinating and potentially useful!
-  - https://github.com/akinsho/toggleterm.nvim
-6. Motion:
-  - There looks to be some gold here! 
+A personalized Neovim configuration with modern features including LSP integration, auto-completion, file navigation, and a clean UI.
 
-Need a way to easily switch between buffers. Harpoon? alternate buffers? 
-Can do `<leader> <leader>` for all current directory files. Can do `<leader> ff` for buffer selection but I don't like it and
-it's not fast enough  don't think.  
+## Notes to self:
+1. Tabline:
+   - RESOLVED: Using barbar and satisfied with it
+2. Startup section:
+   - https://github.com/TobinPalmer/Tip.nvim
+   - https://github.com/CWood-sdf/spaceport.nvim
+3. Note taking:
+   - https://github.com/stevearc/gkeep.nvim
+   - look for others(markdown/notes)
+4. Utility:
+   - Consider better buffer managers
+   - https://github.com/chrisgrieser/nvim-early-retirement Something like this may be useful in addition to current buffer management
+5. Terminal additions:
+   - https://github.com/willothy/flatten.nvim This looks fascinating and potentially useful!
+   - RESOLVED: Using toggleterm.nvim
+6. UI/Visual:
+   - Potential desire to expand into rainbow delimiters for more obvious separation display
+   - Consider removing dressing.nvim and seeing if it makes a difference
+7. File Management:
+   - Consider approach for file saving - need an autosave plugin alongside the undo file approach?
+8. Telescope:
+   - Go through pickers and find what I actually want to use
 
 ## Project Structure
 ```bash
 .
 ├── README.md # This file
-├── init.lua # just loads all the lua files
+├── init.lua # loads all the lua files
 ├── lua/
-│   ├── allison/
-│   │   ├── settings.lua # global settings for neovim
-│   │   ├── lazy.lua # setup lazy.nvim and load all the plugins in the plugins folder
-│   │   ├── keymap.lua # setup some useful keymaps
-│   ├── plugins/
-│   │   ├── blakeline.lua # adds dotted lines to denote and highlight blocks of code
-│   │   ├── comment.lua # adds a comment toggle keymap
-│   │   ├── dressing.lua # replaces some UI elements with better looking ones
-│   │   ├── git-signs.lua # adds git signs to the gutter (left side of the window)
-│   │   ├── harpoon.lua # awesome plugin, more details below
-│   │   ├── lualine.lua # adds a statusline at the bottom of the window with icons and stuff
-│   │   ├── oil.lua # adds a file explorer that is better than the default one
-│   │   ├── telescope.lua # adds a fuzzy finder and a lot more
-│   │   ├── theme.lua # uses gruvbox-material theme with some customizations
-│   │   ├── treesitter.lua # adds treesitter for awesome syntax highlighting
-│   │   ├── undotree.lua # a plugin to visualize all the changes ever made to a file
-│   │   ├── which-key.lua # adds a popup with all the keymaps
-│   │   ├── lsp/ # all the LSP related settings
-│   │   │   ├── init.lua
-│   │   │   ├── format.lua
-│   │   │   ├── lsp_attach.lua # attaches the LSP to the current buffer and sets up keymaps
-│   │   │   ├── servers.lua # all the LSP servers and their config
+│   ├── allison/
+│   │   ├── settings.lua # global settings for neovim
+│   │   ├── lazy.lua # setup lazy.nvim and load plugins
+│   │   ├── keymap.lua # setup keymaps
+│   ├── plugins/
+│   │   ├── barbar.lua # tab/buffer line
+│   │   ├── comment.lua # comment toggle keymap
+│   │   ├── dressing.lua # better UI elements
+│   │   ├── git-signs.lua # git signs in the gutter
+│   │   ├── harpoon.lua # quick file switching
+│   │   ├── image.lua # image viewing in markdown
+│   │   ├── indent-blankline.lua # indentation guides
+│   │   ├── lualine.lua # statusline
+│   │   ├── minimap.lua # code minimap
+│   │   ├── oil.lua # file explorer
+│   │   ├── render-markdown.lua # markdown rendering
+│   │   ├── supermaven.lua # AI code completion
+│   │   ├── telescope.lua # fuzzy finder
+│   │   ├── theme.lua # gruvbox-material theme
+│   │   ├── toggleterm.lua # terminal integration
+│   │   ├── treesitter.lua # syntax highlighting
+│   │   ├── ufo.lua # code folding
+│   │   ├── undotree.lua # visualize file changes
+│   │   ├── which-key.lua # keymap popup
+│   │   ├── lsp/ # LSP related settings
+│   │   │   ├── init.lua
+│   │   │   ├── format.lua # formatting configuration
+│   │   │   ├── lsp_attach.lua # LSP keymaps
+│   │   │   ├── servers.lua # LSP server configs
 ```
 
 ## keymaps
 - `Shift + J` and `Shift + K` to move lines up and down 
-> (press `Shift + V` to select lines and then `Shift + J` or `Shift + K` to move them)
+  > (press `Shift + V` to select lines and then `Shift + J` or `Shift + K` to move them)
 
 - Remap `Shift + U` to redo
 
@@ -65,13 +73,16 @@ it's not fast enough  don't think.
 - `<Leader> + p` to paste from system clipboard
 - `<Leader> + Shift + p` to paste from system clipboard before the cursor
 - `<Leader> + e` to open the file explorer (oil.nvim)
+- `<Leader> + g` to pick a buffer
 - `Alt + s` to force apply any changes without a conformation
 - `gcc` to comment or uncomment a line
 - `gc` to comment or uncomment a block of code (visual mode)
 
 - `<Leader> + ff` to get a list of all open buffers
-- `<Leader> + space` to get a list of all the files in the current dir where nvim is opend
-- `Ctrl + s` to run a search over all the files in the current dir where nvim is opend
+- `<Leader> + space` to get a list of all the files in the current dir where nvim is opened
+- `<Leader> + fl` to run a search over all the files in the current dir (Live Grep)
+- `<C-t>` to create a new buffer tab
+- `<C-q>` to force close current buffer
 
 - `<Leader> + u` to toggle undotree to look at all the changes made to the files
 
@@ -98,15 +109,14 @@ it's not fast enough  don't think.
     - `q` to close the diagnostics window (if cursor is in the diagnostics window)
     - `<Leader> + dd` to toggle the diagnostics window (if not in diagnostics window already)
     - `Shift + K` on a line to see the full error message
-- `<Leader> + f` to format the current file (more info at the botto)
+- `<Leader> + f` to format the current file
 
 ## Formatting
-For formatting `conform.nvim` is used
-It uses a formatter cinfigured in the `lua/lsp/format.lua` file
+For formatting `conform.nvim` is used.
+It uses a formatter configured in the `lua/lsp/format.lua` file
 or the one provided by the LSP server if it's available.
-To install a formatter run `:Mason` and select the formatter you want to install.
+To install a formatter run `:Mason` and select the formatter you want to install,
 and then tell `conform.nvim` to use that formatter by adding it to the `lua/lsp/format.lua` file.
-- `<Leader> + f` to format the current file (more info at the botto)
 
 ## Harpoon
 Harpoon is a plugin that allows you to switch between a set of files
@@ -131,31 +141,69 @@ You can add the current file to the list of files and then switch to any of the 
 You can set more keymaps in the `lua/plugins/harpoon.lua` file.
 
 ## Global Settings
-- enamble line numbers
-- disable relative line numbers
-- disable wrap (enamble if you want)
-- set scrolloff to 8 (:help scrolloff for more info)
+- Enable line numbers
+- Enable relative line numbers
+- Enable wrap
+- Set scrolloff to 8 (:help scrolloff for more info)
 
-- enamble termguicolors (enables true color support)
+- Enable termguicolors (enables true color support)
 
-- set some good split defaults
+- Set some good split defaults
   - splitbelow
   - splitright
 
-- set tabstop and other stuff 
-(it's a bit involved, check the docs for more info)
+- Set tabstop=2 and shiftwidth=2
 
-- disable swap files and backup files in favaor of undo files
-- set the undodir to ~/.vim/undodir
+- Disable swap files and backup files in favor of undo files
+- Set the undodir to ~/.vim/undodir
 
 - Set some good search defaults
 
-- always show the signcolumn
+- Always show the signcolumn
 
-- set some code folding defaults.
-> Folds are not enabled by default 
-so you need a plugin to enable them.
-I use a plugin called `ufo` for this.
+- Set some code folding defaults with `ufo.nvim`
+
+## Workflow Notes and Improvement Areas
+
+### Buffer Management
+- Current approach: Using `<Leader> + g` for buffer switching works, but doesn't scale well with many open buffers
+- Issue: No good way to manage how many buffers are open
+- Workaround: Often restarting Neovim when it gets too crowded
+- Finding files relies on:
+  - Telescope file search (`<Leader> + space`)
+  - Live grep search (`<Leader> + fl`) 
+  - Oil file explorer (`<Leader> + e`)
+  - Buffer list (`<Leader> + ff`) has limitations with many buffers
+
+### Window/Pane Management
+- Basic usage: `Ctrl + w` followed by vim movements (h,j,k,l) to move between splits
+- Issue: Not yet comfortable with creating and managing multiple windows/panes
+- More efficient window management commands to learn:
+  - Creating splits: `:split` (horizontal) and `:vsplit` (vertical)
+  - Resizing: `Ctrl + w` followed by `+`, `-`, `>`, `<`
+  - Balancing: `Ctrl + w` followed by `=`
+
+### Terminal Usage
+- Despite having toggleterm installed, rarely using it in practice
+- Current workflow: Using multiple tabs in terminal emulator instead of Neovim's terminal
+- Opening a new terminal tab for command-line operations rather than using Neovim's built-in terminal
+
+## Recent Additions
+
+### Supermaven AI Code Completion
+- Integrated AI code suggestions
+- Accept with `<Tab>`
+- Clear with `<C-]>`
+- Accept word with `<C-j>`
+
+### Image Support in Markdown
+- View images directly in Neovim
+- Uses kitty terminal backend
+- Automatically clears images when windows overlap
+
+### Enhanced Markdown Rendering
+- Better markdown rendering with syntax highlighting
+- Integrated with image support
 
 ## Theme (Customization)
 The theme `gruvbox-material`
