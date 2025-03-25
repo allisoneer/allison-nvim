@@ -7,6 +7,10 @@ return {
 			lua = { "stylua" },
 			python = { "black" },
 			["c++"] = { "clang-format" },
+			javascript = { "prettierd" },
+			typescript = { "prettierd" },
+			javascriptreact = { "prettierd" },
+			typescriptreact = { "prettierd" },
 			-- Add Zine formats
 			superhtml = { "superhtml" },
 			ziggy = { "ziggy" },
