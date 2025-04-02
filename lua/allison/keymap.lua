@@ -38,3 +38,17 @@ end, "Run zbr in zig-nvim-plugin directory")
 
 nmap("<C-t>", "<Cmd>enew<CR>", "new buffer tab")
 nmap("<C-q>", "<Cmd>BufferClose!<CR>", "Force close current buffer")
+
+-- Copy current file path to clipboard
+nmap("<leader>cp", function()
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	vim.notify("Copied to clipboard: " .. path, vim.log.levels.INFO)
+end, "Copy file path to clipboard")
+
+-- Copy relative file path to clipboard
+nmap("<leader>cr", function()
+	local path = vim.fn.expand("%")
+	vim.fn.setreg("+", path)
+	vim.notify("Copied to clipboard: " .. path, vim.log.levels.INFO)
+end, "Copy relative file path to clipboard")
