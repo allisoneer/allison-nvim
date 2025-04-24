@@ -12,6 +12,9 @@ return {
 			"vimdoc",
 			"markdown",
 			"markdown_inline",
+			"html",
+			"bash",
+			"mermaid",
 			-- Add Zine parsers here
 			"ziggy",
 			"ziggy_schema",
