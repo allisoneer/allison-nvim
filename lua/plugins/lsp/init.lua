@@ -37,45 +37,31 @@ return {
 			}
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-			local mason_lspconfig = require("mason-lspconfig")
 			local servers = require("plugins/lsp/servers")
 
-			local ensure_installed = {}
-			local local_servers = {}
-			for server_name, server in pairs(servers) do
-				if server.cmd == nil then
-					table.insert(ensure_installed, server_name)
-				else
-					table.insert(local_servers, server_name)
-				end
-			end
-
-
-			mason_lspconfig.setup({
-				ensure_installed = ensure_installed,
-			})
-
-			local function setup_server(server_name)
+			-- First set up mason-lspconfig
+			require("mason").setup()
+			
+			-- Pre-configure servers for Neovim 0.11+ using lspconfig
+			for server_name, server_settings in pairs(servers) do
 				local setup_opts = vim.tbl_extend("force", {
 					capabilities = capabilities,
 					on_attach = on_attach,
-				}, servers[server_name])
+				}, server_settings)
+				
 				require("lspconfig")[server_name].setup(setup_opts)
 			end
-
-			mason_lspconfig.setup_handlers({
-				setup_server
-			})
-
-
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					local setup_opts = vim.tbl_extend("force", {
-						capabilities = capabilities,
-						on_attach = on_attach,
-					}, servers[server_name])
-					require("lspconfig")[server_name].setup(setup_opts)
-				end,
+			
+			-- Set up mason-lspconfig
+			local ensure_installed = {}
+			for server_name, server in pairs(servers) do
+				if server.cmd == nil then
+					table.insert(ensure_installed, server_name)
+				end
+			end
+			
+			require("mason-lspconfig").setup({
+				ensure_installed = ensure_installed,
 			})
 
 			local cmp = require("cmp")
