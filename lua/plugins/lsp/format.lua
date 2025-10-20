@@ -45,7 +45,7 @@ return {
 	},
 	keys = {
 		{
-			"<leader>f",
+			"<leader>fm",
 			function()
 				require("conform").format({ async = true, lsp_fallback = true, timeout_ms = 3000 })
 			end,

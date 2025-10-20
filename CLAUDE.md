@@ -72,7 +72,7 @@ zig_exe_path = "/path/to/zml/.zig/zig"
 
 ### Formatting
 - **Auto-format on save**: Enabled by default (async)
-- **Manual format**: `<Leader>f` in normal mode
+- **Manual format**: `<Leader>fm` in normal mode
 - **Formatter configuration**: Edit `lua/plugins/lsp/format.lua`
 - **Formatters per language**:
   - JSON/JS/TS: biome → prettierd fallback
