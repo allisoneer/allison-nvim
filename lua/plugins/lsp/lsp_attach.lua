@@ -1,7 +1,8 @@
-local function on_attach(_, bufnr)
-	local trouble = require("trouble")
-	local builtin = require("telescope.builtin")
+-- Load dependencies at module level with error handling
+local ok_trouble, trouble = pcall(require, "trouble")
+local ok_telescope, builtin = pcall(require, "telescope.builtin")
 
+local function on_attach(_, bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
@@ -13,13 +14,26 @@ local function on_attach(_, bufnr)
 	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-	nmap("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
-	nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
-	nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
-	nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
-	nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
-	nmap("<leader>ws", builtin.lsp_workspace_symbols, "[W]orkspace [S]ymbols")
-	nmap("<leader>dd", trouble.toggle, "[D]iagnostic [D]etails")
+	-- Use telescope if available, fallback to vim.lsp.buf
+	if ok_telescope then
+		nmap("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
+		nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
+		nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
+		nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
+		nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
+		nmap("<leader>ws", builtin.lsp_workspace_symbols, "[W]orkspace [S]ymbols")
+	else
+		nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+		nmap("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+		nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+		nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
+	end
+
+	if ok_trouble then
+		nmap("<leader>dd", trouble.toggle, "[D]iagnostic [D]etails")
+	else
+		nmap("<leader>dd", vim.diagnostic.setloclist, "[D]iagnostic [D]etails")
+	end
 
 	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
 	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")

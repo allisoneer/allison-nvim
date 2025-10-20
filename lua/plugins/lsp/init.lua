@@ -12,6 +12,7 @@ return {
 
 			"folke/neodev.nvim",
 			"folke/trouble.nvim",
+			"nvim-telescope/telescope.nvim",
 
 			-- Cmp Stuff
 			"hrsh7th/nvim-cmp",
@@ -38,29 +39,34 @@ return {
 
 			local servers = require("plugins/lsp/servers")
 
-			-- First set up mason-lspconfig
+			-- Setup Mason first
 			require("mason").setup()
-			
-			-- Pre-configure servers for Neovim 0.11+ using lspconfig
-			for server_name, server_settings in pairs(servers) do
-				local setup_opts = vim.tbl_extend("force", {
-					capabilities = capabilities,
-					on_attach = on_attach,
-				}, server_settings)
-				
-				require("lspconfig")[server_name].setup(setup_opts)
-			end
-			
-			-- Set up mason-lspconfig
+
+			-- Build ensure_installed list (exclude servers with custom cmd)
 			local ensure_installed = {}
 			for server_name, server in pairs(servers) do
 				if server.cmd == nil then
 					table.insert(ensure_installed, server_name)
 				end
 			end
-			
+
+			-- Setup mason-lspconfig with handlers
 			require("mason-lspconfig").setup({
 				ensure_installed = ensure_installed,
+			})
+
+			-- Use handlers to setup each server with correct order
+			require("mason-lspconfig").setup_handlers({
+				-- Default handler for all servers
+				function(server_name)
+					local server_config = servers[server_name] or {}
+					local config = vim.tbl_deep_extend("force", {
+						capabilities = capabilities,
+						on_attach = on_attach,
+					}, server_config)
+
+					require("lspconfig")[server_name].setup(config)
+				end,
 			})
 
 			local cmp = require("cmp")
