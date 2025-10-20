@@ -10,6 +10,13 @@
 		"subpath": "projects/nvim",
 		"sync": "auto"
 	},
-	"context_mounts": [],
+	"context_mounts": [
+    {
+			"remote": "git@github.com:allisoneer/personal_thoughts.git",
+			"subpath": "projects/agentic_auxilary",
+			"mount_path": "general",
+			"sync": "auto"
+		}
+  ],
 	"references": ["https://github.com/allisoneer/agentic_auxilary.git"]
 }
