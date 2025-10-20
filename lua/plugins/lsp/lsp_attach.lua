@@ -50,6 +50,16 @@ local function on_attach(client, bufnr)
 	nmap("<leader>wl", function()
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	end, "[W]orkspace [L]ist Folders")
+
+	-- Diagnostic navigation
+	nmap("[d", vim.diagnostic.goto_prev, "Previous diagnostic")
+	nmap("]d", vim.diagnostic.goto_next, "Next diagnostic")
+	nmap("[e", function()
+		vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+	end, "Previous error")
+	nmap("]e", function()
+		vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+	end, "Next error")
 end
 
 return on_attach
