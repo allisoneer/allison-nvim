@@ -2,7 +2,7 @@
 local ok_trouble, trouble = pcall(require, "trouble")
 local ok_telescope, builtin = pcall(require, "telescope.builtin")
 
-local function on_attach(_, bufnr)
+local function on_attach(client, bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
@@ -11,8 +11,14 @@ local function on_attach(_, bufnr)
 		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
 	end
 
-	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+	-- Check server capabilities before binding keys
+	if client.server_capabilities.renameProvider then
+		nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+	end
+
+	if client.server_capabilities.codeActionProvider then
+		nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+	end
 
 	-- Use telescope if available, fallback to vim.lsp.buf
 	if ok_telescope then
