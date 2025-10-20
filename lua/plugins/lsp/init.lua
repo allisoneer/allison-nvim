@@ -28,6 +28,17 @@ return {
 			}
 
 			local servers = require("plugins/lsp/servers")
+			local lspconfig = require("lspconfig")
+
+			-- Shared helper to setup any server consistently
+			local function setup_server(server_name, servers, capabilities, on_attach)
+				local server_config = servers[server_name] or {}
+				local config = vim.tbl_deep_extend("force", {
+					capabilities = capabilities,
+					on_attach = on_attach,
+				}, server_config)
+				lspconfig[server_name].setup(config)
+			end
 
 			-- Setup Mason first
 			require("mason").setup()
@@ -40,24 +51,25 @@ return {
 				end
 			end
 
-			-- Setup mason-lspconfig with handlers
+			-- Setup mason-lspconfig with handlers inline (correct API)
 			require("mason-lspconfig").setup({
 				ensure_installed = ensure_installed,
+				handlers = {
+					-- Default handler for all mason-managed servers
+					function(server_name)
+						setup_server(server_name, servers, capabilities, on_attach)
+					end,
+				},
 			})
 
-			-- Use handlers to setup each server with correct order
-			require("mason-lspconfig").setup_handlers({
-				-- Default handler for all servers
-				function(server_name)
-					local server_config = servers[server_name] or {}
-					local config = vim.tbl_deep_extend("force", {
-						capabilities = capabilities,
-						on_attach = on_attach,
-					}, server_config)
-
-					require("lspconfig")[server_name].setup(config)
-				end,
-			})
+			-- Manually setup servers that are not mason-managed:
+			-- - Those with a custom cmd
+			-- - Or explicitly marked mason=false (future flexibility)
+			for server_name, server in pairs(servers) do
+				if server.cmd ~= nil or server.mason == false then
+					setup_server(server_name, servers, capabilities, on_attach)
+				end
+			end
 		end,
 	},
 	formatter,  -- This is the only conform spec now (from format.lua)
