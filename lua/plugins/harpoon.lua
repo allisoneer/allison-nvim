@@ -1,36 +1,18 @@
 return {
-	-- Source: https://github.com/ThePrimeagen/harpoon/tree/harpoon2
-	-- I can see the use case for this and how potentially nice it could be, but the problem statements it presents I don't run into yet, and I'd like to use neovim until I run into them and then consider expanding my workflow.
-	-- "ThePrimeagen/harpoon",
-	-- branch = "harpoon2",
-	-- config = function()
-	-- 	local harpoon = require("harpoon")
-	--
-	-- 	harpoon:setup({
-	-- 		settings = {
-	-- 			save_on_toggle = true,
-	-- 			sync_on_ui_close = true,
-	-- 		},
-	-- 	})
-	--
-	-- 	vim.keymap.set("n", "<leader>a", function()
-	-- 		harpoon:list():append()
-	-- 	end, { desc = "[Harpoon] Add file" })
-	-- 	vim.keymap.set("n", "<leader>hh", function()
-	-- 		harpoon.ui:toggle_quick_menu(harpoon:list())
-	-- 	end, { desc = "[Harpoon] Toggle menu" })
-	--
-	-- 	vim.keymap.set("n", "<leader>ha", function()
-	-- 		harpoon:list():select(1)
-	-- 	end, { desc = "[Harpoon] goto 1" })
-	-- 	vim.keymap.set("n", "<leader>hs", function()
-	-- 		harpoon:list():select(2)
-	-- 	end, { desc = "[Harpoon] goto 2" })
-	-- 	vim.keymap.set("n", "<leader>hd", function()
-	-- 		harpoon:list():select(3)
-	-- 	end, { desc = "[Harpoon] goto 3" })
-	-- 	vim.keymap.set("n", "<leader>hf", function()
-	-- 		harpoon:list():select(4)
-	-- 	end, { desc = "[Harpoon] goto 4" })
-	-- end,
+	-- Quick access to frequently used files
+	-- Solves "buffer switching doesn't scale" problem
+	"ThePrimeagen/harpoon",
+	branch = "harpoon2",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	keys = {
+		{ "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon: Add file" },
+		{ "<leader>hh", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "Harpoon: Quick menu" },
+		{ "<leader>ha", function() require("harpoon"):list():select(1) end, desc = "Harpoon: File 1" },
+		{ "<leader>hs", function() require("harpoon"):list():select(2) end, desc = "Harpoon: File 2" },
+		{ "<leader>hd", function() require("harpoon"):list():select(3) end, desc = "Harpoon: File 3" },
+		{ "<leader>hf", function() require("harpoon"):list():select(4) end, desc = "Harpoon: File 4" },
+	},
+	config = function()
+		require("harpoon").setup({})
+	end,
 }
