@@ -1,5 +1,6 @@
 return {
 	'MeanderingProgrammer/render-markdown.nvim',
+	ft = "markdown",
 	dependencies = {
 		'nvim-treesitter/nvim-treesitter',
 		-- You already have nvim-web-devicons through barbar.nvim, so we'll use that
