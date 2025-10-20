@@ -1,8 +1,7 @@
 return {
-	-- Source: https://github.com/akinsho/toggleterm.nvim
-	-- Idk, I'm not sold with this yet. It seems sorta gross.
 	"akinsho/toggleterm.nvim",
+	enabled = false,  -- Trial: disabled (external terminal preferred)
+	-- Re-enable if you want integrated terminal
 	version = "*",
 	opts = {},
-	config = true,
 }

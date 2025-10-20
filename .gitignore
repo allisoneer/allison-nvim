@@ -1,0 +1,5 @@
+**/CLAUDE.local.md
+.claude/
+
+# Thoughts data directory (created by thoughts init)
+/.thoughts-data

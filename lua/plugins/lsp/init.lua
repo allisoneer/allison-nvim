@@ -2,9 +2,9 @@ local formatter = require("plugins/lsp/format")
 local on_attach = require("plugins/lsp/lsp_attach")
 
 return {
-	"stevearc/conform.nvim",
 	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "williamboman/mason.nvim", config = true },
 			"williamboman/mason-lspconfig.nvim",
@@ -13,127 +13,55 @@ return {
 
 			"folke/neodev.nvim",
 			"folke/trouble.nvim",
-
-			-- Cmp Stuff
-			"hrsh7th/nvim-cmp",
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
-
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-path",
-			-- uncomment to eiasble local buffer completion
-			-- also check line 102 ( hit :102 in normal mode )
-			-- "hrsh7th/cmp-buffer",
-
-			"rafamadriz/friendly-snippets",
+			"nvim-telescope/telescope.nvim",
 		},
 		config = function()
 			require("neodev").setup()
 
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			-- Global capabilities: CMP + UFO folding
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			capabilities.textDocument.foldingRange = {
 				dynamicRegistration = false,
 				lineFoldingOnly = true,
 			}
-			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-			local mason_lspconfig = require("mason-lspconfig")
-			local servers = require("plugins/lsp/servers")
-
-			local ensure_installed = {}
-			local local_servers = {}
-			for server_name, server in pairs(servers) do
-				if server.cmd == nil then
-					table.insert(ensure_installed, server_name)
-				else
-					table.insert(local_servers, server_name)
-				end
-			end
-
-			
-			mason_lspconfig.setup({
-				ensure_installed = ensure_installed,
+			-- Apply global defaults for all servers
+			vim.lsp.config("*", {
+				capabilities = capabilities,
 			})
 
-			local function setup_server(server_name)
-				local setup_opts = vim.tbl_extend("force", {
-					capabilities = capabilities,
-					on_attach = on_attach,
-				}, servers[server_name])
-				require("lspconfig")[server_name].setup(setup_opts)
-			end
-
-			mason_lspconfig.setup_handlers({
-				setup_server
-			})
-
-
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					local setup_opts = vim.tbl_extend("force", {
-						capabilities = capabilities,
-						on_attach = on_attach,
-					}, servers[server_name])
-					require("lspconfig")[server_name].setup(setup_opts)
+			-- Invoke our existing keymap logic on attach via autocmd
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
+				callback = function(ev)
+					local client = vim.lsp.get_client_by_id(ev.data.client_id)
+					if not client then
+						return
+					end
+					on_attach(client, ev.buf)
 				end,
 			})
 
-			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			require("luasnip.loaders.from_vscode").lazy_load()
-			luasnip.config.setup({})
+			-- Per-server configuration (must execute BEFORE mason-lspconfig.setup)
+			local servers = require("plugins/lsp/servers")
+			for name, cfg in pairs(servers) do
+				vim.lsp.config(name, cfg or {})
+			end
 
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body)
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-n>"] = cmp.mapping.select_next_item(),
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<C-d>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete({}),
-					["<A-e>"] = cmp.mapping.close(),
-					["<CR>"] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Replace,
-						select = true,
-					}),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.expand_or_locally_jumpable() then
-							luasnip.expand_or_jump()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-				}),
-				sources = {
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "path" },
-					-- uncomment to eiasble local buffer completion
-					-- also check line 24 ( hit :24 in normal mode )
-					-- { name = "buffer" },
-				},
-				completion = {
-					autocomplete = {
-						"TextChanged",
-					},
-				},
+			-- Mason setup
+			require("mason").setup()
+
+			-- Install and automatically enable all configured servers
+			local ensure_installed = {}
+			for name, _ in pairs(servers) do
+				table.insert(ensure_installed, name)
+			end
+
+			require("mason-lspconfig").setup({
+				ensure_installed = ensure_installed,
+				automatic_enable = true, -- Neovim 0.11 native API pattern
 			})
 		end,
 	},
-	formatter,
+	formatter,  -- This is the only conform spec now (from format.lua)
 }

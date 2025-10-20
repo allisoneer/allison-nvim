@@ -1,8 +1,7 @@
 return {
-	-- Seems pretty good out of the box. Supports integratino with folke/trouble.nvim which seems very interesting.
+	-- Supports integration with folke/trouble.nvim
 	-- Source: https://github.com/lewis6991/gitsigns.nvim
 	"lewis6991/gitsigns.nvim",
-	config = function()
-		require("gitsigns").setup()
-	end
+	dependencies = { "nvim-lua/plenary.nvim" },
+	opts = {},  -- Use defaults
 }

@@ -1,7 +1,7 @@
 return {
-	-- I don't understand what this is doing and if/why I need it.
-	-- Source: https://github.com/stevearc/dressing.nvim
-	-- TODO: Consider removing and seeing the difference.
 	"stevearc/dressing.nvim",
+	enabled = false,  -- Trial: disabled to evaluate if needed
+	-- Improves vim.ui.select and vim.ui.input
+	-- Re-enable if you miss enhanced UI for these
 	opts = {}
 }
