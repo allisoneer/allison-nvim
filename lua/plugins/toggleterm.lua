@@ -1,6 +1,7 @@
 return {
 	"akinsho/toggleterm.nvim",
-	-- Terminal toggle (trial - remove if not used after 1 week)
+	enabled = false,  -- Trial: disabled (external terminal preferred)
+	-- Re-enable if you want integrated terminal
 	version = "*",
 	opts = {},
 }
