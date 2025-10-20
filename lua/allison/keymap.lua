@@ -37,7 +37,7 @@ nmap("<leader>z", function()
 end, "Run zbr in zig-nvim-plugin directory")
 
 nmap("<C-t>", "<Cmd>enew<CR>", "new buffer tab")
-nmap("<C-q>", "<Cmd>BufferClose!<CR>", "Force close current buffer")
+nmap("<C-q>", "<Cmd>BufferClose<CR>", "Close current buffer")
 
 -- Copy current file path to clipboard
 nmap("<leader>cp", function()
@@ -48,9 +48,24 @@ end, "Copy file path to clipboard")
 
 -- Copy relative file path to clipboard (from initial Neovim startup directory)
 nmap("<leader>cr", function()
-	local initial_cwd = vim.g.initial_working_directory or vim.fn.getcwd()
-	local full_path = vim.fn.expand("%:p")
-	local relative_path = vim.fn.fnamemodify(full_path, ":~:." .. initial_cwd)
-	vim.fn.setreg("+", relative_path)
-	vim.notify("Copied to clipboard: " .. relative_path, vim.log.levels.INFO)
+	-- Validate buffer has a file
+	if vim.api.nvim_buf_get_name(0) == "" then
+		vim.notify("No file associated with current buffer", vim.log.levels.WARN)
+		return
+	end
+
+	local base = vim.g.initial_working_directory or vim.fn.getcwd()
+	local full = vim.fn.expand("%:p")
+
+	-- Use vim.fs.relpath for correct relative path calculation
+	local rel = vim.fs.relpath(full, base)
+
+	if rel then
+		vim.fn.setreg("+", rel)
+		vim.notify("Copied relative path: " .. rel, vim.log.levels.INFO)
+	else
+		-- Fallback: file is outside base directory
+		vim.fn.setreg("+", full)
+		vim.notify("File outside startup dir, copied absolute: " .. full, vim.log.levels.WARN)
+	end
 end, "Copy relative file path to clipboard")

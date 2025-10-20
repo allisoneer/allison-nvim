@@ -20,6 +20,8 @@ vim.opt.splitright = true
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.softtabstop = 2
 
 vim.opt.swapfile = false
 vim.opt.updatetime = 300
@@ -48,4 +50,15 @@ vim.filetype.add({
 		ziggy = 'ziggy',
 		['ziggy-schema'] = 'ziggy_schema',
 	},
+})
+
+-- Expandtab exceptions for languages that require tabs
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "make", "go" },
+	callback = function()
+		vim.opt_local.expandtab = false
+		vim.opt_local.tabstop = 4
+		vim.opt_local.shiftwidth = 4
+	end,
+	group = vim.api.nvim_create_augroup("TabSettings", { clear = true }),
 })

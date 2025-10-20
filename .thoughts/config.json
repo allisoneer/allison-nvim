@@ -1,0 +1,15 @@
+{
+	"version": "2.0",
+	"mount_dirs": {
+		"thoughts": "thoughts",
+		"context": "context",
+		"references": "references"
+	},
+	"thoughts_mount": {
+		"remote": "git@github.com:allisoneer/personal_thoughts.git",
+		"subpath": "projects/nvim",
+		"sync": "auto"
+	},
+	"context_mounts": [],
+	"references": ["https://github.com/allisoneer/agentic_auxilary.git"]
+}

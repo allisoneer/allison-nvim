@@ -2,7 +2,6 @@ local formatter = require("plugins/lsp/format")
 local on_attach = require("plugins/lsp/lsp_attach")
 
 return {
-	"stevearc/conform.nvim",
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -106,7 +105,6 @@ return {
 					end, { "i", "s" }),
 				}),
 				sources = {
-					{ name = "supermaven" },
 					{ name = "nvim_lsp" },
 					-- { name = "luasnip" },
 					{ name = "path" },
@@ -122,5 +120,5 @@ return {
 			})
 		end,
 	},
-	formatter,
+	formatter,  -- This is the only conform spec now (from format.lua)
 }
