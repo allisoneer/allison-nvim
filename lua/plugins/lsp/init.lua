@@ -18,12 +18,14 @@ return {
 		config = function()
 			require("neodev").setup()
 
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			-- Get default capabilities with CMP enhancements
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+			-- Add folding range support for UFO
 			capabilities.textDocument.foldingRange = {
 				dynamicRegistration = false,
 				lineFoldingOnly = true,
 			}
-			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 			local servers = require("plugins/lsp/servers")
 
