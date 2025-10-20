@@ -33,8 +33,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 nmap("<leader>g", "<Cmd>BufferPick<CR>", "Pick a buffer!")
 
 nmap("<leader>z", function()
-	vim.system({ "/home/allison/.local/bin/zig-nvim-plugin" })
-end, "Run zbr in zig-nvim-plugin directory")
+	local exe = vim.fn.expand("~/.local/bin/zig-nvim-plugin")
+	if vim.fn.filereadable(exe) == 1 then
+		vim.system({ exe })
+		vim.notify("Running zig-nvim-plugin...", vim.log.levels.INFO)
+	else
+		vim.notify(
+			"zig-nvim-plugin not found at: " .. exe,
+			vim.log.levels.ERROR
+		)
+	end
+end, "Run zig-nvim-plugin")
 
 nmap("<C-t>", "<Cmd>enew<CR>", "new buffer tab")
 nmap("<C-q>", "<Cmd>BufferClose<CR>", "Close current buffer")

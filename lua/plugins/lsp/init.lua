@@ -25,8 +25,6 @@ return {
 			-- uncomment to eiasble local buffer completion
 			-- also check line 102 ( hit :102 in normal mode )
 			-- "hrsh7th/cmp-buffer",
-
-			"rafamadriz/friendly-snippets",
 		},
 		config = function()
 			require("neodev").setup()
@@ -70,6 +68,7 @@ return {
 				end,
 			})
 
+			-- TODO: Extract CMP to separate file in Phase 2
 			local cmp = require("cmp")
 			-- local luasnip = require("luasnip")
 			-- require("luasnip.loaders.from_vscode").lazy_load()

@@ -4,16 +4,10 @@ vim.g.netrw_banner = 0
 vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.opt.wrap = true
-
--- This was crazy? some weird helix nonsense.
--- vim.opt.whichwrap = "b,s,h,l"
-
--- TODO: wrapmargin is not working, fix it!
--- NVM, seems fine now? Remove this TODO once you confirm forsure it's working well?
 vim.opt.wrapmargin = 25
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5
-vim.o.termguicolors = true
+vim.opt.termguicolors = true
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
@@ -26,7 +20,17 @@ vim.opt.softtabstop = 2
 vim.opt.swapfile = false
 vim.opt.updatetime = 300
 vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+
+-- Cross-platform undo directory
+local uv = vim.uv or vim.loop
+local undodir = vim.fn.stdpath("state") .. "/undo"
+
+-- Create directory if it doesn't exist
+if vim.fn.isdirectory(undodir) == 0 then
+	uv.fs_mkdir(undodir, 448)  -- 0700 permissions
+end
+
+vim.opt.undodir = undodir
 vim.opt.undofile = true
 
 vim.opt.hlsearch = false
@@ -36,10 +40,10 @@ vim.opt.smartcase = true
 
 vim.opt.signcolumn = "yes"
 
-vim.o.foldcolumn = "0"
-vim.o.foldlevel = 99
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.opt.foldcolumn = "0"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 
 
 -- Add Zine file type associations
