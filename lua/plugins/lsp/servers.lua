@@ -1,32 +1,28 @@
-local cwd = vim.fn.getcwd()
+-- Function to get ZLS config based on current directory
+local function get_zls_config()
+	local cwd = vim.fn.getcwd()
+	local is_zml = vim.endswith(cwd, "zml") or vim.endswith(cwd, "zml/examples")
 
-local function is_zml_project()
-	return vim.endswith(cwd, "zml") or
-			vim.endswith(cwd, "zml/examples")
-end
-
-local zls_config = {}
-if is_zml_project() then
-	-- In ZML project, use the project's custom ZLS and Zig
-	zls_config = {
-		cmd = { cwd .. "/tools/zls.sh" },
-		settings = {
-			zls = {
-				enable_autofix = true,
-				zig_exe_path = cwd .. "/tools/zig.sh",
+	if is_zml then
+		return {
+			cmd = { cwd .. "/tools/zls.sh" },
+			settings = {
+				zls = {
+					enable_autofix = true,
+					zig_exe_path = cwd .. "/tools/zig.sh",
+				},
 			},
-		},
-	}
-else
-	-- Default configuration for other projects
-	zls_config = {
-		cmd = { vim.fs.normalize("~/.local/bin/zls") },
-		settings = {
-			zls = {
-				enable_autofix = true,
+		}
+	else
+		return {
+			cmd = { vim.fs.normalize("~/.local/bin/zls") },
+			settings = {
+				zls = {
+					enable_autofix = true,
+				},
 			},
-		},
-	}
+		}
+	end
 end
 
 return {
@@ -43,7 +39,7 @@ return {
 			},
 		},
 	},
-	zls = zls_config,
+	zls = get_zls_config(),  -- Call function to get config
 	biome = {},
 	clangd = {},
 	pyright = {
