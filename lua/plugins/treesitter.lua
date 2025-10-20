@@ -1,36 +1,9 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	event = "BufReadPost",
-	opts = {
-		ensure_installed = {
-			"lua",
-			"json",
-			"yaml",
-			"zig",
-			"python",
-			"go",
-			"rust",
-			"vimdoc",
-			"markdown",
-			"markdown_inline",
-			"html",
-			"bash",
-			"mermaid",
-			-- Add Zine parsers here
-			"ziggy",
-			"ziggy_schema",
-			"supermd",
-			"supermd_inline",
-			"superhtml"
-		},
-		auto_install = false,
-		highlight = { enable = true },
-		indent = { enable = true },
-	},
 	build = ":TSUpdate",
-	config = function(conf)
-		-- Add parser configurations first
-		---@class	parser_config
+	config = function()
+		-- Register custom parsers first
 		local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 
 		-- Add Zine-related parsers
@@ -101,8 +74,16 @@ return {
 			filetype = "superhtml",
 		}
 
-		vim.defer_fn(function()
-			require("nvim-treesitter.configs").setup(conf.opts)
-		end, 0)
+		-- Then setup treesitter
+		require("nvim-treesitter.configs").setup({
+			ensure_installed = {
+				"lua", "json", "yaml", "zig", "python", "go", "rust",
+				"vimdoc", "markdown", "markdown_inline", "html", "bash", "mermaid",
+				"ziggy", "ziggy_schema", "supermd", "supermd_inline", "superhtml"
+			},
+			auto_install = false,
+			highlight = { enable = true },
+			indent = { enable = true },
+		})
 	end,
 }

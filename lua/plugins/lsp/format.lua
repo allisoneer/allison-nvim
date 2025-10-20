@@ -43,11 +43,14 @@ return {
 			},
 		}
 	},
-	config = function(conf)
-		require("conform").setup(conf.opts)
-
-		vim.keymap.set("n", "<leader>f", function()
-			require("conform").format({ async = true, lsp_fallback = true })
-		end, { desc = "Format buffer" })
-	end,
+	keys = {
+		{
+			"<leader>f",
+			function()
+				require("conform").format({ async = true, lsp_fallback = true, timeout_ms = 3000 })
+			end,
+			desc = "Format buffer",
+		},
+	},
+	-- opts is auto-passed to setup() by lazy.nvim, no need for manual config
 }

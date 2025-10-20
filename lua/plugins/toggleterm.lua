@@ -1,8 +1,6 @@
 return {
-	-- Source: https://github.com/akinsho/toggleterm.nvim
-	-- Idk, I'm not sold with this yet. It seems sorta gross.
 	"akinsho/toggleterm.nvim",
+	-- Terminal toggle (trial - remove if not used after 1 week)
 	version = "*",
 	opts = {},
-	config = true,
 }
