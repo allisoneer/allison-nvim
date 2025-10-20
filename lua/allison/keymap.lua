@@ -78,3 +78,19 @@ nmap("<leader>cr", function()
 		vim.notify("File outside startup dir, copied absolute: " .. full, vim.log.levels.WARN)
 	end
 end, "Copy relative file path to clipboard")
+
+-- Group descriptions for which-key
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		local ok, wk = pcall(require, "which-key")
+		if ok then
+			wk.register({
+				["<leader>c"] = { name = "+Clipboard" },
+				["<leader>d"] = { name = "+Diagnostics" },
+				["<leader>f"] = { name = "+Find/Format" },
+				["<leader>h"] = { name = "+Harpoon" },
+				["<leader>w"] = { name = "+Workspace" },
+			})
+		end
+	end,
+})
