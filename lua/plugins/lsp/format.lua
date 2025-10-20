@@ -1,16 +1,21 @@
 return {
 	"stevearc/conform.nvim",
 	opts = {
-		format_after_save = { async = true, lsp_fallback = true },
+		format_after_save = {
+			async = true,
+			lsp_fallback = true,
+			timeout_ms = 3000,  -- 3 second timeout
+		},
 		formatters_by_ft = {
-			json = { "biome" },
+			-- Add fallback chains
+			json = { "biome", "prettierd", "jq" },
 			lua = { "stylua" },
 			python = { "black" },
 			["c++"] = { "clang-format" },
-			javascript = { "prettierd" },
-			typescript = { "prettierd" },
-			javascriptreact = { "prettierd" },
-			typescriptreact = { "prettierd" },
+			javascript = { "prettierd", "biome" },
+			typescript = { "prettierd", "biome" },
+			javascriptreact = { "prettierd", "biome" },
+			typescriptreact = { "prettierd", "biome" },
 			-- Add Zine formats
 			superhtml = { "superhtml" },
 			ziggy = { "ziggy" },

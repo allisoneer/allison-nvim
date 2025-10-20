@@ -4,17 +4,17 @@ return {
 	-- Source: https://github.com/nvim-telescope/telescope.nvim
 	"nvim-telescope/telescope.nvim",
 	branch = "0.1.x",
+	cmd = "Telescope",
+	keys = {
+		{ "<leader>ff", "<cmd>Telescope buffers<cr>", desc = "Find Open Files" },
+		{ "<leader><space>", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+		{ "<leader>fl", "<cmd>Telescope live_grep<cr>", desc = "Find in Files" },
+	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		local telescope = require("telescope")
-		telescope.setup({})
-		-- telescope.load_extension("ui-select")
-
-		local builtin = require("telescope.builtin")
-		vim.keymap.set("n", "<leader>ff", builtin.buffers, { desc = "Find Open Files" })
-		vim.keymap.set("n", "<leader><space>", builtin.find_files, { desc = "Find Files" })
-		vim.keymap.set("n", "<leader>fl", builtin.live_grep, { desc = "Find in Files" })
+		require("telescope").setup({})
+		-- require("telescope").load_extension("ui-select")
 	end,
 }

@@ -4,6 +4,7 @@ local on_attach = require("plugins/lsp/lsp_attach")
 return {
 	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "williamboman/mason.nvim", config = true },
 			"williamboman/mason-lspconfig.nvim",

@@ -2,6 +2,10 @@ return {
 	-- Seems fancier than I need. Will add this to the performance check and maybe look at why this is useful later on.
 	-- Source: https://github.com/stevearc/oil.nvim?tab=readme-ov-file#installation
 	"stevearc/oil.nvim",
+	cmd = "Oil",
+	keys = {
+		{ "<leader>e", function() require("oil").open() end, desc = "Open file explorer" },
+	},
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
 		local oil = require("oil")
@@ -10,9 +14,6 @@ return {
 			view_options = {
 				show_hidden = true,
 			},
-		})
-		vim.keymap.set({ "n", "v" }, "<leader>e", oil.open, {
-			desc = "Open file explorer",
 		})
 		vim.api.nvim_create_autocmd({ "BufEnter" }, {
 			callback = function(opts)
