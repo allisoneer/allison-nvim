@@ -18,58 +18,49 @@ return {
 		config = function()
 			require("neodev").setup()
 
-			-- Get default capabilities with CMP enhancements
+			-- Global capabilities: CMP + UFO folding
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-			-- Add folding range support for UFO
 			capabilities.textDocument.foldingRange = {
 				dynamicRegistration = false,
 				lineFoldingOnly = true,
 			}
 
-			local servers = require("plugins/lsp/servers")
-			local lspconfig = require("lspconfig")
-
-			-- Shared helper to setup any server consistently
-			local function setup_server(server_name, servers, capabilities, on_attach)
-				local server_config = servers[server_name] or {}
-				local config = vim.tbl_deep_extend("force", {
-					capabilities = capabilities,
-					on_attach = on_attach,
-				}, server_config)
-				lspconfig[server_name].setup(config)
-			end
-
-			-- Setup Mason first
-			require("mason").setup()
-
-			-- Build ensure_installed list (exclude servers with custom cmd)
-			local ensure_installed = {}
-			for server_name, server in pairs(servers) do
-				if server.cmd == nil then
-					table.insert(ensure_installed, server_name)
-				end
-			end
-
-			-- Setup mason-lspconfig with handlers inline (correct API)
-			require("mason-lspconfig").setup({
-				ensure_installed = ensure_installed,
-				handlers = {
-					-- Default handler for all mason-managed servers
-					function(server_name)
-						setup_server(server_name, servers, capabilities, on_attach)
-					end,
-				},
+			-- Apply global defaults for all servers
+			vim.lsp.config("*", {
+				capabilities = capabilities,
 			})
 
-			-- Manually setup servers that are not mason-managed:
-			-- - Those with a custom cmd
-			-- - Or explicitly marked mason=false (future flexibility)
-			for server_name, server in pairs(servers) do
-				if server.cmd ~= nil or server.mason == false then
-					setup_server(server_name, servers, capabilities, on_attach)
-				end
+			-- Invoke our existing keymap logic on attach via autocmd
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
+				callback = function(ev)
+					local client = vim.lsp.get_client_by_id(ev.data.client_id)
+					if not client then
+						return
+					end
+					on_attach(client, ev.buf)
+				end,
+			})
+
+			-- Per-server configuration (must execute BEFORE mason-lspconfig.setup)
+			local servers = require("plugins/lsp/servers")
+			for name, cfg in pairs(servers) do
+				vim.lsp.config(name, cfg or {})
 			end
+
+			-- Mason setup
+			require("mason").setup()
+
+			-- Install and automatically enable all configured servers
+			local ensure_installed = {}
+			for name, _ in pairs(servers) do
+				table.insert(ensure_installed, name)
+			end
+
+			require("mason-lspconfig").setup({
+				ensure_installed = ensure_installed,
+				automatic_enable = true, -- Neovim 0.11 native API pattern
+			})
 		end,
 	},
 	formatter,  -- This is the only conform spec now (from format.lua)
